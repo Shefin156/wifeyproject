@@ -11,9 +11,9 @@ const GRID = 3;
 const IMAGES = [
   '/assets/Us.jpeg',
   '/assets/Cute.jpeg',
-  'public/assets/Face.jpeg',
-  'public/assets/Love.jpeg',
-  'public/assets/Usss.jpeg'
+  '/assets/Face.jpeg',
+  '/assets/Love.jpeg',
+  '/assets/Usss.jpeg'
 ];
 
 /* ---------------------------------- */
