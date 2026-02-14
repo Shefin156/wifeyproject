@@ -10,7 +10,7 @@ export const timelineMilestones = [
     id: 'first-call',
     title: 'Our favourite picture together',
     date: 'Forever together',
-    image: '/assets/WhatsApp Image 2026-02-14 at 2.32.08 PM.jpeg',
+    image: '/assets/Love',
     description: 'An unexpected picture of happiness that I keep close to my heart',
   },
   {
