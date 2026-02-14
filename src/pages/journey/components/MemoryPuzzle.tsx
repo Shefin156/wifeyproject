@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const PUZZLE_IMAGE = 'dist/assets/Us.jpeg';
+const PUZZLE_IMAGE = 'assets/Us.jpeg';
 const GRID = 3;
 
 function shuffleArray<T>(arr: T[]): T[] {
