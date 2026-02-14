@@ -1,20 +1,22 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import confetti from 'canvas-confetti';
 
 const PUZZLE_IMAGE = '/assets/Us.jpeg';
 const GRID = 3;
 
 /* ---------------------------------- */
-/* Soft Shuffle (Always Solvable)     */
+/* Very Soft Shuffle (Super Easy)     */
 /* ---------------------------------- */
 
-const generateSoftShuffle = () => {
+const generateVerySoftShuffle = () => {
+  // Start solved
   let arr = Array.from({ length: GRID * GRID }, (_, i) => i);
   let emptyIndex = 0;
 
-  // Only perform limited valid moves
-  for (let i = 0; i < 15; i++) {
+  // Only 6–8 moves → very easy
+  const movesToMake = 6 + Math.floor(Math.random() * 3);
+
+  for (let i = 0; i < movesToMake; i++) {
     const possibleMoves: number[] = [];
     const row = Math.floor(emptyIndex / GRID);
     const col = emptyIndex % GRID;
@@ -35,21 +37,12 @@ const generateSoftShuffle = () => {
 };
 
 export default function MemoryPuzzle() {
-  const [order, setOrder] = useState<number[]>(generateSoftShuffle);
+  const [order, setOrder] = useState<number[]>(generateVerySoftShuffle);
   const [solved, setSolved] = useState(false);
 
   const checkSolved = useCallback((newOrder: number[]) => {
     const ok = newOrder.every((v, i) => v === i);
-    if (ok) {
-      setSolved(true);
-
-      // Romantic confetti celebration
-      confetti({
-        particleCount: 120,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
-    }
+    if (ok) setSolved(true);
   }, []);
 
   const move = (clickedIndex: number) => {
@@ -77,7 +70,7 @@ export default function MemoryPuzzle() {
 
   const resetPuzzle = () => {
     setSolved(false);
-    setOrder(generateSoftShuffle());
+    setOrder(generateVerySoftShuffle());
   };
 
   return (
@@ -86,14 +79,14 @@ export default function MemoryPuzzle() {
         Memory Puzzle
       </h3>
       <p className="text-romantic-beige/70 text-sm mb-4">
-        Put the pieces back together ❤️
+        Just a tiny shuffle… you’ve got this ❤️
       </p>
 
       <div className="relative aspect-square max-w-[280px] mx-auto rounded-xl overflow-hidden bg-romantic-purple-deep">
 
-        {/* Faint guide image behind */}
+        {/* Very faint preview (makes it much easier) */}
         <div
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0 opacity-15"
           style={{
             backgroundImage: `url(${PUZZLE_IMAGE})`,
             backgroundSize: 'cover',
@@ -122,12 +115,12 @@ export default function MemoryPuzzle() {
               <motion.button
                 key={cellIndex}
                 type="button"
-                className="rounded overflow-hidden bg-romantic-purple"
+                className="rounded overflow-hidden"
                 onClick={() => move(cellIndex)}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
                 layout
-                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                transition={{ type: 'spring', stiffness: 260, damping: 20 }}
               >
                 <div
                   className="w-full h-full bg-cover bg-no-repeat"
@@ -158,14 +151,14 @@ export default function MemoryPuzzle() {
                 transition={{ type: 'spring', stiffness: 200 }}
                 className="text-romantic-pink text-lg font-medium mb-4"
               >
-                Of course you solved it… you already solved my heart.
+                See? I told you it was easy.
               </motion.p>
 
               <button
                 onClick={resetPuzzle}
                 className="px-4 py-2 bg-romantic-pink text-white rounded-full text-sm"
               >
-                Play Again
+                Shuffle Again
               </button>
             </motion.div>
           )}
