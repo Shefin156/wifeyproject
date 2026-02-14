@@ -1,19 +1,29 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 
-const PUZZLE_IMAGE = '/assets/Us.jpeg';
 const GRID = 3;
 
 /* ---------------------------------- */
-/* Very Soft Shuffle (Super Easy)     */
+/* Add As Many Images As You Want     */
+/* ---------------------------------- */
+
+const IMAGES = [
+  '/assets/Us.jpeg',
+  '/assets/Cute.jpeg',
+  'public/assets/Face.jpeg',
+  'public/assets/Love.jpeg',
+  'public/assets/Usss.jpeg'
+];
+
+/* ---------------------------------- */
+/* Soft & Always Solvable Shuffle     */
 /* ---------------------------------- */
 
 const generateVerySoftShuffle = () => {
-  // Start solved
   let arr = Array.from({ length: GRID * GRID }, (_, i) => i);
   let emptyIndex = 0;
 
-  // Only 6–8 moves → very easy
   const movesToMake = 6 + Math.floor(Math.random() * 3);
 
   for (let i = 0; i < movesToMake; i++) {
@@ -37,12 +47,36 @@ const generateVerySoftShuffle = () => {
 };
 
 export default function MemoryPuzzle() {
+  const [currentImage, setCurrentImage] = useState(
+    IMAGES[Math.floor(Math.random() * IMAGES.length)]
+  );
+
   const [order, setOrder] = useState<number[]>(generateVerySoftShuffle);
   const [solved, setSolved] = useState(false);
 
+  const launchCelebration = () => {
+    confetti({
+      particleCount: 150,
+      spread: 80,
+      origin: { y: 0.6 },
+    });
+
+    // Extra burst
+    setTimeout(() => {
+      confetti({
+        particleCount: 80,
+        spread: 100,
+        origin: { y: 0.4 },
+      });
+    }, 400);
+  };
+
   const checkSolved = useCallback((newOrder: number[]) => {
     const ok = newOrder.every((v, i) => v === i);
-    if (ok) setSolved(true);
+    if (ok) {
+      setSolved(true);
+      launchCelebration();
+    }
   }, []);
 
   const move = (clickedIndex: number) => {
@@ -71,6 +105,7 @@ export default function MemoryPuzzle() {
   const resetPuzzle = () => {
     setSolved(false);
     setOrder(generateVerySoftShuffle());
+    setCurrentImage(IMAGES[Math.floor(Math.random() * IMAGES.length)]);
   };
 
   return (
@@ -79,16 +114,16 @@ export default function MemoryPuzzle() {
         Memory Puzzle
       </h3>
       <p className="text-romantic-beige/70 text-sm mb-4">
-        Just a tiny shuffle… you’ve got this ❤️
+        A little memory for us ❤️
       </p>
 
-      <div className="relative aspect-square max-w-[280px] mx-auto rounded-xl overflow-hidden bg-romantic-purple-deep">
+      <div className="relative aspect-square max-w-[300px] mx-auto rounded-xl overflow-hidden bg-romantic-purple-deep">
 
-        {/* Very faint preview (makes it much easier) */}
+        {/* Soft preview guide */}
         <div
           className="absolute inset-0 opacity-15"
           style={{
-            backgroundImage: `url(${PUZZLE_IMAGE})`,
+            backgroundImage: `url(${currentImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
@@ -100,12 +135,7 @@ export default function MemoryPuzzle() {
         >
           {order.map((pieceIndex, cellIndex) => {
             if (pieceIndex === 0) {
-              return (
-                <div
-                  key={cellIndex}
-                  className="bg-white/10 rounded"
-                />
-              );
+              return <div key={cellIndex} className="bg-white/10 rounded" />;
             }
 
             const row = Math.floor((pieceIndex - 1) / GRID);
@@ -115,17 +145,17 @@ export default function MemoryPuzzle() {
               <motion.button
                 key={cellIndex}
                 type="button"
-                className="rounded overflow-hidden"
                 onClick={() => move(cellIndex)}
                 whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
+                whileTap={{ scale: 0.97 }}
                 layout
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                className="rounded overflow-hidden"
               >
                 <div
                   className="w-full h-full bg-cover bg-no-repeat"
                   style={{
-                    backgroundImage: `url(${PUZZLE_IMAGE})`,
+                    backgroundImage: `url(${currentImage})`,
                     backgroundPosition: `${col * (100 / (GRID - 1))}% ${
                       row * (100 / (GRID - 1))
                     }%`,
@@ -145,20 +175,29 @@ export default function MemoryPuzzle() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
+              <motion.img
+                src={currentImage}
+                alt="Full Memory"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.6 }}
+                className="rounded-lg mb-4 shadow-lg"
+              />
+
               <motion.p
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring', stiffness: 200 }}
                 className="text-romantic-pink text-lg font-medium mb-4"
               >
-                See? I told you it was easy.
+                You completed another memory ❤️
               </motion.p>
 
               <button
                 onClick={resetPuzzle}
                 className="px-4 py-2 bg-romantic-pink text-white rounded-full text-sm"
               >
-                Shuffle Again
+                Reveal Another Memory
               </button>
             </motion.div>
           )}
