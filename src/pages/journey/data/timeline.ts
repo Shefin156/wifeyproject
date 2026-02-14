@@ -10,7 +10,7 @@ export const timelineMilestones = [
     id: 'first-call',
     title: 'Our favourite picture together',
     date: 'Forever together',
-    image: '/assets/Love',
+    image: '/assets/Love.jpeg',
     description: 'An unexpected picture of happiness that I keep close to my heart',
   },
   {
