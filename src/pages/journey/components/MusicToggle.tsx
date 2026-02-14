@@ -7,7 +7,7 @@ type MusicToggleProps = {
   className?: string;
 };
 
-export default function MusicToggle({ src = '/journey-music.mp3', className = '' }: MusicToggleProps) {
+export default function MusicToggle({ src = 'Connie Francis - Pretty Little Baby (Official Audio) - Connie Francis - Official.mp3', className = '' }: MusicToggleProps) {
   const [muted, setMuted] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
